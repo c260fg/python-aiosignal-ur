@@ -95,7 +95,7 @@ pkgname="${_py}-${_pkg}"
 pkgver=1.3.1
 _commit="2b8907dc15f976d3747a16bd65f1681ae54249a3"
 _bundle_commit="74d15c006702e8430cbc4c5bf40b03de713f56ff"
-pkgrel=10
+pkgrel=11
 _pkgdesc=(
   "List of registered"
   "asynchronous callbacks"
@@ -238,8 +238,10 @@ validpgpkeys=(
 )
 
 build() {
+  ls \
+    -lsh
   cd \
-    "${_pkg}-${pkgver}"
+    "${_tarname}"
   "${_py}" \
     -m \
       build \
@@ -248,7 +250,7 @@ build() {
 
 check() {
   cd \
-    "${_pkg}-${pkgver}"
+    "${_tarname}"
   PYTHONPATH="$PWD" \
   pytest \
     -v
@@ -256,14 +258,14 @@ check() {
 
 package() {
   cd \
-    "${_pkg}-${pkgver}"
+    "${_tarname}"
   "${_py}" \
     -m \
       "installer" \
     --destdir="${pkgdir}" \
     "dist/"*".whl"
   install \
-    -Dm 644 \
+    -vDm644 \
     "LICENSE" \
     -t \
     "${pkgdir}/usr/share/licenses/${pkgname}"
