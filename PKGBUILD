@@ -90,12 +90,16 @@ _pymajver="${_pyver%.*}"
 _pyminver="${_pymajver#*.}"
 _pynextver="${_pymajver%.*}.$((
   ${_pyminver} + 1))"
+_pep517='true'
 _pkg=aiosignal
-pkgname="${_py}-${_pkg}"
+pkgbase="${_py}-${_pkg}"
+pkgname=(
+  "${pkgbase}"
+)
 pkgver=1.3.1
 _commit="2b8907dc15f976d3747a16bd65f1681ae54249a3"
 _bundle_commit="74d15c006702e8430cbc4c5bf40b03de713f56ff"
-pkgrel=12
+pkgrel=13
 _pkgdesc=(
   "List of registered"
   "asynchronous callbacks"
@@ -110,15 +114,21 @@ license=(
   'Apache'
 )
 depends=(
-  "${_py}"
+  "${_py}>=${_pymajver}"
+  "${_py}<${_pynextver}"
   "${_py}-frozenlist"
 )
 makedepends=(
-  "${_py}-build"
-  "${_py}-installer"
+  "${_py}"
   "${_py}-setuptools"
   "${_py}-wheel"
 )
+if [[ "${_pep517}" == true ]]; then
+  makedepends+=(
+    "${_py}-build"
+    "${_py}-installer"
+  )
+fi
 checkdepends=(
   "${_py}-pytest"
   "${_py}-pytest-cov"
